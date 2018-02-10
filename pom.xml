@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.sigpwned</groupId>
@@ -7,8 +8,20 @@
   <packaging>maven-plugin</packaging>
 
   <name>jacoco-badge-maven-plugin</name>
-  <description>A simple maven plugin to generate JaCoCo build badges</description>
-  <url>http://github.com/sigpwned/jacoco-badge-maven-plugin</url>
+  <description>
+    A simple maven plugin to generate JaCoCo build badges
+  </description>
+  <url>https://github.com/sigpwned/jacoco-badge-maven-plugin</url>
+  <inceptionYear>2018</inceptionYear>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+      <comments>A business-friendly OSS license</comments>
+    </license>
+  </licenses>
 
   <developers>
     <developer>
@@ -22,20 +35,14 @@
       </roles>
       <timezone>America/Los_Angeles</timezone>
       <properties>
+        <twitter>sigpwned</twitter>
       </properties>
     </developer>
   </developers>
 
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
   <scm>
     <url>https://github.com/sigpwned/jacoco-badge-maven-plugin.git</url>
+    <connection>scm:git:https://github.com/sigpwned/jacoco-badge-maven-plugin.git</connection>
     <developerConnection>scm:git:https://github.com/sigpwned/jacoco-badge-maven-plugin.git</developerConnection>
     <tag>v0.1.2</tag>
   </scm>
