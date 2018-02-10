@@ -1,48 +1,27 @@
-/**
+/*
  * Copyright 2018 Andy Boothe
  * 
- *     Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *     http://www.apache.org/licenses/LICENSE-2.0
  * 
- *     Unless required by applicable law or agreed to in writing, software
- *     distributed under the License is distributed on an "AS IS" BASIS,
- *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.sigpwned.maven.jacoco;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
-
-/*
- * Copyright 2001-2005 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.sigpwned.maven.jacoco;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -50,23 +29,13 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+import com.sigpwned.maven.jacoco.util.Coverages;
+
 /**
  * Goal which generates a coverage badge for JaCoCo.
  */
 @Mojo( name = "badge", defaultPhase = LifecyclePhase.TEST )
 public class BadgeMojo extends AbstractMojo {
-    public static enum Metric {
-        instruction, branch, line, metric;
-        
-        public static Metric fromString(String s) {
-            return valueOf(s.toLowerCase());
-        }
-        
-        public String toString() {
-            return name().toLowerCase();
-        }
-    }
-    
     /**
      * What metric should be used to generate the badge: instruction, branch,
      * line, metric
@@ -124,39 +93,15 @@ public class BadgeMojo extends AbstractMojo {
             throw new MojoExecutionException("Failed to load badge template", e);
         }
 
-        long covered=0, missed=0;
+        Coverage coverage;
         try {
-            try (BufferedReader csv=new BufferedReader(new InputStreamReader(new FileInputStream(new File(jacocoOutputDir, "jacoco.csv")), StandardCharsets.UTF_8))) {
-                List<String> headers=Arrays.asList(csv.readLine().trim().split(","));
-                
-                String coveredName=metric.name().toUpperCase()+"_COVERED";
-                int ci=headers.indexOf(coveredName);
-                if(ci == -1)
-                    throw new IOException("jacoco CSV report has no header: "+coveredName+", headers="+headers);
-                
-                String missedName=metric.name().toUpperCase()+"_MISSED";
-                int mi=headers.indexOf(missedName);
-                if(mi == -1)
-                    throw new IOException("jacoco CSV report has no header: "+missedName+", headers="+headers);
-                
-                for(String line=csv.readLine();line!=null && !line.trim().equals("");line=csv.readLine()) {
-                    List<String> fields=Arrays.asList(line.trim().split(","));
-                    if(fields.size() != headers.size())
-                        throw new IOException("jacoco CSV report has field/header mismatch: headers="+headers+", fields="+fields);
-                    
-                    long mycovered=Long.parseLong(fields.get(ci));
-                    long mymissed=Long.parseLong(fields.get(mi));
-                    
-                    covered += mycovered;
-                    missed += mymissed;
-                }
-            }
+            coverage = Coverages.report(new File(jacocoOutputDir, "jacoco.csv"), metric);
         }
         catch(IOException e) {
-            throw new MojoExecutionException("Failed to read jacoco results", e);
+            throw new MojoExecutionException("Failed to read jacoco coverage report", e);
         }
         
-        int percent=Math.toIntExact(100L*covered/(covered+missed));
+        int percent=(int)(100.0 * coverage.getPercent());
         
         boolean passed=percent > passing;
         
