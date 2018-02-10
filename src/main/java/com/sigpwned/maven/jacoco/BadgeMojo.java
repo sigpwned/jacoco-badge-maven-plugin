@@ -32,7 +32,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import com.sigpwned.maven.jacoco.util.Coverages;
 
 /**
- * Goal which generates a coverage badge for JaCoCo.
+ * Generates a badge from JaCoCo test coverage reports.
  */
 @Mojo( name = "badge", defaultPhase = LifecyclePhase.TEST )
 public class BadgeMojo extends AbstractMojo {

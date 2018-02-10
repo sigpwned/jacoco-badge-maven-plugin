@@ -37,7 +37,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * Goal which generates a coverage badge for JaCoCo.
+ * Generates a single aggregate project test coverage report from the disparate
+ * module-specific test coverage reports
  */
 @Mojo( name = "report", defaultPhase = LifecyclePhase.TEST )
 public class ReportMojo extends AbstractMojo {
