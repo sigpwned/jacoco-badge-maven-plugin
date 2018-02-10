@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -27,6 +28,20 @@ import java.util.Map;
 
 public class CoverageReport implements AutoCloseable {
     public static class Row {
+        public static Row fromStrings(List<String> fields) {
+            String grp=fields.get(HEADERS.indexOf("GROUP"));
+            String pkg=fields.get(HEADERS.indexOf("PACKAGE"));
+            String cls=fields.get(HEADERS.indexOf("CLASS"));
+
+            Map<Metric,Coverage> coverages=new EnumMap<>(Metric.class);
+            for(Metric metric : Metric.values())
+                coverages.put(metric, new Coverage(
+                    Long.parseLong(fields.get(HEADERS.indexOf(metric.name().toUpperCase()+"_COVERED"))),
+                    Long.parseLong(fields.get(HEADERS.indexOf(metric.name().toUpperCase()+"_MISSED")))));
+            
+            return new Row(grp, pkg, cls, coverages);
+        }
+        
         private final String grp;
         private final String pkg;
         private final String cls;
@@ -58,10 +73,27 @@ public class CoverageReport implements AutoCloseable {
         private Map<Metric, Coverage> getCoverages() {
             return coverages;
         }
+        
+        public List<String> toStrings() {
+            List<String> result=new ArrayList<>();
+            result.add(getGroup());
+            result.add(getPackage());
+            result.add(getKlass());
+            for(Coverage coverage : getCoverages().values()) {
+                result.add(Long.toString(coverage.getMissed()));
+                result.add(Long.toString(coverage.getCovered()));
+            }
+            return Collections.unmodifiableList(result);
+        }
     }
     
+    public static final List<String> HEADERS=Arrays.asList(
+        "GROUP", "PACKAGE", "CLASS", "INSTRUCTION_MISSED",
+        "INSTRUCTION_COVERED", "BRANCH_MISSED", "BRANCH_COVERED",
+        "LINE_MISSED", "LINE_COVERED", "COMPLEXITY_MISSED",
+        "COMPLEXITY_COVERED", "METHOD_MISSED", "METHOD_COVERED");
+    
     private final BufferedReader lines;
-    private final List<String> headers;
     
     public CoverageReport(Reader r) throws IOException {
         this(new BufferedReader(r));
@@ -72,30 +104,18 @@ public class CoverageReport implements AutoCloseable {
         String line=lines.readLine();
         if(line == null)
             throw new EOFException();
-        this.headers = Arrays.asList(line.trim().split(","));
+        
+        List<String> headers=Arrays.asList(line.trim().split(","));
+        if(!getHeaders().equals(HEADERS))
+            throw new IOException("unexpected headers; expected="+HEADERS+", found="+headers);
     }
 
     public CoverageReport.Row next() throws IOException {
         CoverageReport.Row result;
         
         String line=getLines().readLine();
-        if(line != null) {
-            List<String> fields=Arrays.asList(line.split(","));
-            if(fields.size() != getHeaders().size())
-                throw new IOException("field / header mismatch: headers="+headers+", fields="+fields);
-            
-            String grp=fields.get(getHeaders().indexOf("GROUP"));
-            String pkg=fields.get(getHeaders().indexOf("PACKAGE"));
-            String cls=fields.get(getHeaders().indexOf("CLASS"));
-
-            Map<Metric,Coverage> coverages=new EnumMap<>(Metric.class);
-            for(Metric metric : Metric.values())
-                coverages.put(metric, new Coverage(
-                    Long.parseLong(fields.get(getHeaders().indexOf(metric.name().toUpperCase()+"_COVERED"))),
-                    Long.parseLong(fields.get(getHeaders().indexOf(metric.name().toUpperCase()+"_MISSED")))));
-            
-            result = new CoverageReport.Row(grp, pkg, cls, coverages);
-        }
+        if(line != null)
+            result = Row.fromStrings(Arrays.asList(line.split(",")));
         else
             result = null;
         
@@ -111,6 +131,6 @@ public class CoverageReport implements AutoCloseable {
     }
 
     private List<String> getHeaders() {
-        return headers;
+        return HEADERS;
     }
 }

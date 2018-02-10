@@ -15,13 +15,8 @@
  */
 package com.sigpwned.maven.jacoco;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -34,8 +29,8 @@ import com.sigpwned.maven.jacoco.util.Coverages;
 /**
  * Goal which generates a coverage badge for JaCoCo.
  */
-@Mojo( name = "badge", defaultPhase = LifecyclePhase.TEST )
-public class BadgeMojo extends AbstractMojo {
+@Mojo( name = "pass", defaultPhase = LifecyclePhase.TEST )
+public class PassMojo extends AbstractMojo {
     /**
      * What metric should be used to generate the badge: instruction, branch,
      * line, metric
@@ -50,26 +45,12 @@ public class BadgeMojo extends AbstractMojo {
     private int passing;
     
     /**
-     * Where was the report file generated?
+     * Where should the report be generated?
      */
     @Parameter( defaultValue = "${project.build.directory}/jacoco-total.csv", property = "reportFile", required = false )
     private File reportFile;
     
-    /**
-     * Where should the badge be generated?
-     */
-    @Parameter( defaultValue = "${project.build.directory}/jacoco.svg", property = "outputFile", required = false )
-    private File badgeFile;
-    
-    private static final String PASSING_COLOR="rgb(55,179,17)";
-
-    private static final String FAILING_COLOR="rgb(192,64,49)";
-    
     public void execute() throws MojoExecutionException {
-        File badgeFile=this.badgeFile;
-        if(!badgeFile.getParentFile().exists())
-            badgeFile.getParentFile().mkdirs();
-        
         File reportFile=this.reportFile;
         if(!reportFile.getParentFile().exists())
             reportFile.getParentFile().mkdirs();
@@ -92,39 +73,9 @@ public class BadgeMojo extends AbstractMojo {
         
         boolean passed=percent >= passing;
         
-        String template;
-        try {
-            try (InputStream in=Thread.currentThread().getContextClassLoader().getResourceAsStream("template.svg")) {
-                template = new String(read(in), StandardCharsets.UTF_8);
-            }
-        }
-        catch(IOException e) { 
-            throw new MojoExecutionException("Failed to load badge template", e);
-        }
+        getLog().info("Found "+percent+"% test coverage. Minimum to pass is "+passing+"%.");
         
-        String badge=template;
-        badge = badge.replace("{{message}}", Integer.toString(percent)+"%");
-        badge = badge.replace("{{color}}", passed ? PASSING_COLOR : FAILING_COLOR);
-        
-        try {
-            try (OutputStream out=new FileOutputStream(badgeFile)) {
-                out.write(badge.getBytes(StandardCharsets.UTF_8));
-            }
-        }
-        catch(IOException e) {
-            throw new MojoExecutionException("Failed to write badge", e);
-        }
-        
-        getLog().info("Generated "+(passed ? "passing" : "failing")+" badge with "+percent+"% test coverage.");
-    }
-    
-    private static byte[] read(InputStream in) throws IOException {
-        ByteArrayOutputStream result=new ByteArrayOutputStream();
-        
-        byte[] buf=new byte[64*1024];
-        for(int nread=in.read(buf);nread!=-1;nread=in.read(buf))
-            result.write(buf, 0, nread);
-        
-        return result.toByteArray();
+        if(!passed)
+            throw new MojoExecutionException("Project did not pass sufficient test coverage: "+percent+"% < "+passing+"%");
     }
 }

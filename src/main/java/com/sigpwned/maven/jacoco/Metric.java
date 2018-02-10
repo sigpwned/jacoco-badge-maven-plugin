@@ -16,5 +16,5 @@
 package com.sigpwned.maven.jacoco;
 
 public enum Metric {
-    instruction, branch, line, method;
+    instruction, branch, line, complexity, method;
 }
