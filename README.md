@@ -1,4 +1,4 @@
-# jacoco-badge-maven-plugin ![Test Coverage](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiYW50WHpPZStGUnVwT0VIWUpkUkhQZGVNWllGdWZuT3cvb3lVRk1ic0p6d0ZUdCt6ZWlyaDRub1E0b2lNNXlUdEQ2YlpBNEhXNTRsaDRBU3p2VnFXTENBPSIsIml2UGFyYW1ldGVyU3BlYyI6IkdjS0JTcFErUURac3VTbisiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
+# jacoco-badge-maven-plugin ![Build Status](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiYW50WHpPZStGUnVwT0VIWUpkUkhQZGVNWllGdWZuT3cvb3lVRk1ic0p6d0ZUdCt6ZWlyaDRub1E0b2lNNXlUdEQ2YlpBNEhXNTRsaDRBU3p2VnFXTENBPSIsIml2UGFyYW1ldGVyU3BlYyI6IkdjS0JTcFErUURac3VTbisiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master) ![Test Coverage](target/jacoco.svg)
 
 A simple maven plugin to generate JaCoCo build badges
 
