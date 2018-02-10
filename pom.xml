@@ -105,30 +105,6 @@
       </plugin>
 
       <plugin>
-        <groupId>com.sigpwned</groupId>
-        <artifactId>jacoco-badge-maven-plugin</artifactId>
-        <version>0.1.2</version>
-        <executions>
-          <execution>
-            <id>post-unit-test</id>
-            <phase>test</phase>
-            <goals>
-              <goal>report</goal>
-              <goal>badge</goal>
-              <goal>pass</goal>
-            </goals>
-            <configuration>
-              <!-- What coverage level is considered passing? Optional, default 70. -->
-              <passing>70</passing>
-
-              <!-- Legal values: instruction, branch, line, method. Optional, default instruction. -->
-              <metric>instruction</metric>
-            </configuration>
-         </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.0</version>
