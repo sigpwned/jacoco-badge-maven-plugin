@@ -1,4 +1,4 @@
-# jacoco-badge-maven-plugin ![Test Coverage](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiYW50WHpPZStGUnVwT0VIWUpkUkhQZGVNWllGdWZuT3cvb3lVRk1ic0p6d0ZUdCt6ZWlyaDRub1E0b2lNNXlUdEQ2YlpBNEhXNTRsaDRBU3p2VnFXTENBPSIsIml2UGFyYW1ldGVyU3BlYyI6IkdjS0JTcFErUURac3VTbisiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
+# jacoco-badge-maven-plugin ![Build Status](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiYW50WHpPZStGUnVwT0VIWUpkUkhQZGVNWllGdWZuT3cvb3lVRk1ic0p6d0ZUdCt6ZWlyaDRub1E0b2lNNXlUdEQ2YlpBNEhXNTRsaDRBU3p2VnFXTENBPSIsIml2UGFyYW1ldGVyU3BlYyI6IkdjS0JTcFErUURac3VTbisiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master) ![Test Coverage](target/jacoco.svg)
 
 A simple maven plugin to generate JaCoCo build badges
 
@@ -78,15 +78,17 @@ time to generate a badge from that report. Here is an example
 configuration of this plugin to generate a badge based on unit tests:
 
     <plugin>
-      <groupId>org.sigpwned</groupId>
-      <artifactId>jacoco-badge-builder</artifactId>
-      <version>0.1.0</version>
+      <groupId>com.sigpwned</groupId>
+      <artifactId>jacoco-badge-maven-plugin</artifactId>
+      <version>0.1.3</version>
       <executions>
         <execution>
           <id>post-unit-test</id>
           <phase>test</phase>
           <goals>
-            <goal>report</goal>
+            <goal>report</goal> <!-- Generate a unified JaCoCo report -->
+            <goal>badge</goal> <!-- Generate a badge from a unified JaCoCo report -->
+            <goal>pass</goal> <!-- Fail the build if insufficient coverage -->
           </goals>
           <configuration>
             <!-- What coverage level is considered passing? Optional, default 70. -->
@@ -94,12 +96,6 @@ configuration of this plugin to generate a badge based on unit tests:
 
             <!-- Legal values: instruction, branch, line, method. Optional, default instruction. -->
             <metric>instruction</metric>
-
-            <!-- Where was the JaCoCo report generated? -->
-            <jacocoOutputDirectory>${project.reporting.outputDirectory}/jacoco-ut</jacocoOutputDirectory>
-
-            <!-- Where should the badge be generated? Optional, default ${project.reporting.outputDirectory} -->
-            <badgeOutputDirectory>${project.reporting.outputDirectory}</badgetOutputDirectory>
           </configuration>
        </execution>
       </executions>
@@ -113,7 +109,7 @@ README:
 * GitHub Only -- Generate the badge file into a resource directory,
   and then embed a reference to the badge into your README. This has
   the benefit of being very simple, but won't allow for the testing of
-  pull requests, etc.
+  pull requests, etc. For an example, look at this README.
 
 * CodeBuild -- Save the generated badge file as an artifact; configure
   S3 to send an event every time a badge is uploaded; use a lambda
