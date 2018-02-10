@@ -20,7 +20,7 @@
   </licenses>
 
   <scm>
-    <url>http://github.com/sigpwned/jacoco-badge-maven-plugin</url>
+    <url>https://github.com/sigpwned/jacoco-badge-maven-plugin.git</url>
   </scm>
 
   <properties>
