@@ -37,6 +37,7 @@
 
   <scm>
     <url>https://github.com/sigpwned/jacoco-badge-maven-plugin.git</url>
+    <developerConnection>scm:git:https://github.com/sigpwned/jacoco-badge-maven-plugin.git</developerConnection>
   </scm>
 
   <properties>
