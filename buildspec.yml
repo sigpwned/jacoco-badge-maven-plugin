@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+  pre_build:
+    commands:
+  build:
+    commands:
+      - echo Build started on `date`
+      - mvn test
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - mvn deploy
+artifacts:
+  files:
+    - '**/target/*.jar'
+    - '**/target/*.svg'
+    - '**/target/coverage-reports/*'
+    - '**/target/surefire-reports/*'
+    - '**/target/site/jacoco*/*'
+    - '**/target/site/jacoco*/*/*'
