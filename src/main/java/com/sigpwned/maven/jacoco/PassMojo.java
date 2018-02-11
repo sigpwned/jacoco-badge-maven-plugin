@@ -73,7 +73,7 @@ public class PassMojo extends AbstractMojo {
         
         boolean passed=percent >= passing;
         
-        getLog().info("Found "+percent+"% test coverage. Minimum to pass is "+passing+"%.");
+        getLog().info("jacoco coverage="+percent+" pass="+passing);
         
         if(!passed)
             throw new MojoExecutionException("Project did not pass sufficient test coverage: "+percent+"% < "+passing+"%");
