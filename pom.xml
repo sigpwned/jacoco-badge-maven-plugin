@@ -3,7 +3,7 @@
 
   <groupId>com.sigpwned</groupId>
   <artifactId>jacoco-badge-maven-plugin</artifactId>
-  <version>0.1.4</version>
+  <version>0.1.5-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>jacoco-badge-maven-plugin</name>
@@ -43,7 +43,7 @@
     <url>https://github.com/sigpwned/jacoco-badge-maven-plugin.git</url>
     <connection>scm:git:https://github.com/sigpwned/jacoco-badge-maven-plugin.git</connection>
     <developerConnection>scm:git:https://github.com/sigpwned/jacoco-badge-maven-plugin.git</developerConnection>
-    <tag>v0.1.4</tag>
+    <tag>v0.1.2</tag>
   </scm>
 
   <properties>
@@ -168,7 +168,7 @@
       <plugin>
         <groupId>com.sigpwned</groupId>
         <artifactId>jacoco-badge-maven-plugin</artifactId>
-        <version>0.1.4</version>
+        <version>0.1.5-SNAPSHOT</version>
         <executions>
           <execution>
             <id>generate-badge</id>
