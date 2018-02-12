@@ -168,7 +168,7 @@
       <plugin>
         <groupId>com.sigpwned</groupId>
         <artifactId>jacoco-badge-maven-plugin</artifactId>
-        <version>0.1.5-SNAPSHOT</version>
+        <version>0.1.4</version>
         <executions>
           <execution>
             <id>generate-badge</id>
