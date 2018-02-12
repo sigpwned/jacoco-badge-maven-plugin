@@ -43,33 +43,62 @@ formatted HTML JaCoCo test coverage report.
       <executions>
         <!-- Ask JaCoCo to generate a test report from surefire tests -->
         <execution>
-          <id>pre-unit-test</id>
+          <id>prepare-code-coverage</id>
           <goals>
             <goal>prepare-agent</goal>
           </goals>
           <configuration>
-            <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
             <propertyName>surefireArgLine</propertyName>
           </configuration>
         </execution>
 
         <!-- Ask JaCoCo to format test report into browsable HTML -->
+        <!-- Multi-module builds should include report-aggregate and use the -->
+        <!-- default outputDirectory. -->
+        <!-- Single-module builds should exclude report-aggregate and use -->
+        <!-- the given outputDirectory. -->
         <execution>
-          <id>post-unit-test</id>
-          <phase>test</phase>
+          <id>report-code-coverage</id>
           <goals>
             <goal>report</goal>
+            <!-- <goal>report-aggregate</goal> -->
           </goals>
           <configuration>
-            <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
-            <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+            <!-- Multi-module builds should 
+            <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate</outputDirectory>
+          </configuration>
+        </execution>
+
+        <!-- Make sure we have at least 70% coverage -->
+        <execution>
+          <id>verify-test-coverage</id>
+          <goals>
+            <goal>check</goal>
+          </goals>
+          <configuration>
+            <rules>
+              <rule>
+                <element>BUNDLE</element>
+                <excludes>
+                  <exclude>*Mojo</exclude>
+                </excludes>
+                <limits>
+                  <limit>
+                    <counter>INSTRUCTION</counter>
+                    <value>COVEREDRATIO</value>
+                    <minimum>70%</minimum>
+                  </limit>
+                </limits>
+              </rule>
+            </rules>
+            <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate</outputDirectory>
           </configuration>
         </execution>
       </executions>
     </plugin>
 
 With this configuration, running `mvn test` should generate a friendly
-HTML report of test coverage at `target/site/jacoco-ut/index.html`.
+HTML report of test coverage at `target/site/jacoco-aggregate/index.html`.
 
 ### Configuring Badge Generation
 
@@ -83,12 +112,10 @@ configuration of this plugin to generate a badge based on unit tests:
       <version>0.1.3</version>
       <executions>
         <execution>
-          <id>post-unit-test</id>
-          <phase>test</phase>
+          <id>generate-jacoco-badge</id>
+          <phase>verify</phase>
           <goals>
-            <goal>report</goal> <!-- Generate a unified JaCoCo report -->
             <goal>badge</goal> <!-- Generate a badge from a unified JaCoCo report -->
-            <goal>pass</goal> <!-- Fail the build if insufficient coverage -->
           </goals>
           <configuration>
             <!-- What coverage level is considered passing? Optional, default 70. -->

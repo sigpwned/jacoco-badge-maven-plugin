@@ -34,7 +34,7 @@ import com.sigpwned.maven.jacoco.util.Coverages;
 /**
  * Generates a badge from JaCoCo test coverage reports.
  */
-@Mojo( name = "badge", defaultPhase = LifecyclePhase.TEST )
+@Mojo( name = "badge", defaultPhase = LifecyclePhase.VERIFY )
 public class BadgeMojo extends AbstractMojo {
     /**
      * What metric should be used to generate the badge: instruction, branch,
@@ -52,18 +52,21 @@ public class BadgeMojo extends AbstractMojo {
     /**
      * Where was the report file generated?
      */
-    @Parameter( defaultValue = "${project.build.directory}/jacoco-total.csv", property = "reportFile", required = false )
+    @Parameter( defaultValue = "${project.reporting.outputDirectory}/jacoco-aggregate/jacoco.csv", property = "reportFile", required = false )
     private File reportFile;
     
     /**
      * Where should the badge be generated?
      */
-    @Parameter( defaultValue = "${project.build.directory}/jacoco.svg", property = "outputFile", required = false )
+    @Parameter( defaultValue = "${project.reporting.outputDirectory}/jacoco-aggregate/jacoco.svg", property = "outputFile", required = false )
     private File badgeFile;
     
     private static final String PASSING_COLOR="rgb(55,179,17)";
 
     private static final String FAILING_COLOR="rgb(192,64,49)";
+    
+    @SuppressWarnings("unused")
+    private static final String INFO_COLOR="rgb(18,80,172)";
     
     public void execute() throws MojoExecutionException {
         File badgeFile=this.badgeFile;
@@ -115,7 +118,7 @@ public class BadgeMojo extends AbstractMojo {
             throw new MojoExecutionException("Failed to write badge", e);
         }
         
-        getLog().info("Generated "+(passed ? "passing" : "failing")+" badge with "+percent+"% test coverage.");
+        getLog().info("jacoco coverage="+percent+" pass="+passing);
     }
     
     private static byte[] read(InputStream in) throws IOException {

@@ -122,24 +122,45 @@
         </configuration>
         <executions>
           <execution>
-            <id>pre-unit-test</id>
+            <id>prepare-test-coverage</id>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
             <configuration>
-              <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
               <propertyName>surefireArgLine</propertyName>
             </configuration>
           </execution>
           <execution>
-            <id>post-unit-test</id>
-            <phase>test</phase>
+            <id>generate-report</id>
             <goals>
               <goal>report</goal>
             </goals>
             <configuration>
-              <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
-              <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>verify-test-coverage</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <rule>
+                  <element>BUNDLE</element>
+                  <excludes>
+                    <exclude>*Mojo</exclude>
+                  </excludes>
+                  <limits>
+                    <limit>
+                      <counter>INSTRUCTION</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>70%</minimum>
+                    </limit>
+                  </limits>
+                </rule>
+              </rules>
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate</outputDirectory>
             </configuration>
           </execution>
         </executions>
@@ -148,15 +169,12 @@
       <plugin>
         <groupId>com.sigpwned</groupId>
         <artifactId>jacoco-badge-maven-plugin</artifactId>
-        <version>0.1.3</version>
+        <version>0.1.4-SNAPSHOT</version>
         <executions>
           <execution>
-            <id>post-unit-test</id>
-            <phase>test</phase>
+            <id>generate-badge</id>
             <goals>
-              <goal>report</goal>
               <goal>badge</goal>
-              <goal>pass</goal>
             </goals>
             <configuration>
               <!-- What coverage level is considered passing? Optional, default 70. -->
@@ -164,8 +182,10 @@
 
               <!-- Legal values: instruction, branch, line, method. Optional, default instruction. -->
               <metric>instruction</metric>
+
+              <badgeFile>${project.build.directory}/jacoco.svg</badgeFile>
             </configuration>
-         </execution>
+          </execution>
         </executions>
       </plugin>
 
@@ -267,7 +287,6 @@
             <executions>
               <execution>
                 <id>sign-artifacts</id>
-                <phase>verify</phase>
                 <goals>
                   <goal>sign</goal>
                 </goals>
