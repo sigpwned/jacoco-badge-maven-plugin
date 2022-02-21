@@ -67,6 +67,24 @@ public class BadgeMojo extends AbstractMojo {
     
     @SuppressWarnings("unused")
     private static final String INFO_COLOR="rgb(18,80,172)";
+
+    // the skipTest family should be taken in account so we don't break the build
+
+    @Parameter( property = "skipTests", defaultValue = "false" )
+    private boolean skipTests;
+
+    @Parameter( property = "skipITs", defaultValue = "false")
+    private boolean skipITs;
+
+    @Deprecated
+    @Parameter( property = "maven.test.skip.exec", defaultValue = "false")
+    private boolean skipExec;
+
+    @Parameter( property = "maven.test.skip", defaultValue = "false" )
+    private boolean skip;
+
+    private Coverage lastCoverage;
+    private int lastPercent;
     
     public void execute() throws MojoExecutionException {
         File badgeFile=this.badgeFile;
@@ -83,17 +101,23 @@ public class BadgeMojo extends AbstractMojo {
                 "Invalid passing score: "+passing,
                 "Passing score must be from 0-100: "+passing);
         
-        Coverage coverage;
-        try {
-            coverage = Coverages.report(reportFile, metric);
-        }
-        catch(IOException e) {
-            throw new MojoExecutionException("Failed to read coverage", e);
-        }
+        Coverage coverage = null;
+        int percent;
 
-        int percent=(int)(100.0 * coverage.getPercent());
+        if(skipTests || skipITs || skipExec || skip) {
+            percent = 0;
+            getLog().info("Tests skipped, generating zero coverage");
+        } else {
+            try {
+                coverage = Coverages.report(reportFile, metric);
+            }
+            catch(IOException e) {
+                throw new MojoExecutionException("Failed to read coverage", e);
+            }    
+            percent = (int)(100.0 * coverage.getPercent());
+        }
         
-        boolean passed=percent >= passing;
+        boolean passed = percent >= passing;
         
         String template;
         try {
@@ -119,6 +143,9 @@ public class BadgeMojo extends AbstractMojo {
         }
         
         getLog().info("jacoco coverage="+percent+" pass="+passing);
+
+        lastCoverage = coverage;
+        lastPercent = percent;
     }
     
     private static byte[] read(InputStream in) throws IOException {
