@@ -10,9 +10,9 @@
 	</defs>
 	<g clip-path="url(#_clipPath_wZl5jWgvTXc48vQrIn9ZtKR4ZEDCQdNi)">
 		<g id="codebuild-status-badge-passing">
-			<path d=" M 53 0 L 115.351 0 L 115.351 0 C 117.376 0 119.018 1.343 119.018 3 L 119.018 17 L 119.018 17 C 119.018 18.657 117.376 20 115.351 20 L 53 20 L 53 0 Z " fill-rule="evenodd" fill="{{color}}"/>
+			<path d=" M 53 0 L 115.351 0 L 115.351 0 C 117.376 0 119.018 1.343 119.018 3 L 119.018 17 L 119.018 17 C 119.018 18.657 117.376 20 115.351 20 L 53 20 L 53 0 Z " fill-rule="evenodd" fill="rgb(55,179,17)"/>
 			<clipPath id="_clipPath_qKZkRll7HOLPR2WicTaFzdLVqQ9F1CnF">
-				<path d=" M 53 0 L 115.351 0 L 115.351 0 C 117.376 0 119.018 1.343 119.018 3 L 119.018 17 L 119.018 17 C 119.018 18.657 117.376 20 115.351 20 L 53 20 L 53 0 Z " fill-rule="evenodd" fill="{{color}}"/>
+				<path d=" M 53 0 L 115.351 0 L 115.351 0 C 117.376 0 119.018 1.343 119.018 3 L 119.018 17 L 119.018 17 C 119.018 18.657 117.376 20 115.351 20 L 53 20 L 53 0 Z " fill-rule="evenodd" fill="rgb(55,179,17)"/>
 			</clipPath>
 			<g clip-path="url(#_clipPath_qKZkRll7HOLPR2WicTaFzdLVqQ9F1CnF)">
 				<defs>
@@ -32,7 +32,7 @@
 								</defs>
 								<g filter="url(#Ov6KVKINFl83F4J3K5mLfoaMmyzd0rCq)">
 									<g transform="matrix(1,0,0,1,52.509,0)">
-										<text text-anchor="middle" transform="matrix(1,0,0,1,32.616,14.075)" style="font-family:&quot;Verdana&quot;;font-weight:400;font-size:14px;font-style:normal;fill:#ffffff;stroke:none;">{{message}}</text>
+										<text text-anchor="middle" transform="matrix(1,0,0,1,32.616,14.075)" style="font-family:&quot;Verdana&quot;;font-weight:400;font-size:14px;font-style:normal;fill:#ffffff;stroke:none;">84%</text>
 									</g>
 								</g>
 							</g>
@@ -60,7 +60,7 @@
 													</defs>
 													<g filter="url(#DydAd6JhDQFX7PqD71JRzO7a5meTnaZl)">
 														<g transform="matrix(1,0,0,1,5.002,0)">
-															<text transform="matrix(1,0,0,1,0.424,14.075)" style="font-family:&quot;Verdana&quot;;font-weight:400;font-size:14px;font-style:normal;fill:#ffffff;stroke:none;">{{label}}</text>
+															<text transform="matrix(1,0,0,1,0.424,14.075)" style="font-family:&quot;Verdana&quot;;font-weight:400;font-size:14px;font-style:normal;fill:#ffffff;stroke:none;">line</text>
 														</g>
 													</g>
 												</g>
