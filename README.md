@@ -1,4 +1,4 @@
-# jacoco-badge-maven-plugin ![Build Status](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiYW50WHpPZStGUnVwT0VIWUpkUkhQZGVNWllGdWZuT3cvb3lVRk1ic0p6d0ZUdCt6ZWlyaDRub1E0b2lNNXlUdEQ2YlpBNEhXNTRsaDRBU3p2VnFXTENBPSIsIml2UGFyYW1ldGVyU3BlYyI6IkdjS0JTcFErUURac3VTbisiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master) ![Test Coverage](target/jacoco.svg)
+# jacoco-easy-badger-maven-plugin
 
 A simple maven plugin to generate JaCoCo build badges
 
@@ -106,39 +106,77 @@ Once JaCoCo has been configured to generate a formatted report, it's
 time to generate a badge from that report. Here is an example
 configuration of this plugin to generate a badge based on unit tests:
 
-    <plugin>
-      <groupId>com.sigpwned</groupId>
-      <artifactId>jacoco-badge-maven-plugin</artifactId>
-      <version>0.1.3</version>
-      <executions>
-        <execution>
-          <id>generate-jacoco-badge</id>
-          <phase>verify</phase>
-          <goals>
-            <goal>badge</goal> <!-- Generate a badge from a unified JaCoCo report -->
-          </goals>
-          <configuration>
-            <!-- What coverage level is considered passing? Optional, default 70. -->
-            <passing>70</passing>
-
-            <!-- Legal values: instruction, branch, line, method. Optional, default instruction. -->
-            <metric>instruction</metric>
-          </configuration>
-       </execution>
-      </executions>
-    </plugin>
+```xml
+<plugin>
+  <groupId>com.jrichardsz</groupId>
+  <artifactId>jacoco-easy-badger-maven-plugin</artifactId>
+  <version>1.0.0</version>
+  <executions>
+    <execution>
+      <id>generate-jacoco-badge</id>
+      <phase>package</phase>
+      <goals>
+        <!-- Generate a badge from a unified JaCoCo report -->
+        <goal>badge</goal>
+      </goals>
+      <configuration>
+        <!-- jacoco csv report previously generated -->
+        <reportFile>${project.build.directory}/site/jacoco/jacoco.csv</reportFile>
+        <!-- target folder where badges will be generated -->
+        <badgesFolder>${project.basedir}/.coverage</badgesFolder>
+        <!-- minimum threshold allowed  -->
+        <passing>70</passing>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+```
 
 ## Including the Badge in your README
 
 There are a couple of good ways to include the badge file into your
 README:
 
-* GitHub Only -- Generate the badge file into a resource directory,
-  and then embed a reference to the badge into your README. This has
-  the benefit of being very simple, but won't allow for the testing of
-  pull requests, etc. For an example, look at this README.
+**GitHub Only**
 
-* CodeBuild -- Save the generated badge file as an artifact; configure
-  S3 to send an event every time a badge is uploaded; use a lambda
-  function to copy the latest badge to a known, fixed location; embed
-  a link to that fixed location.
+It is not a convention but you could storage the svg badges in the **.coverage** folder, add the follwing markdown piece (usually at the begining) and push changes
+
+```
+# sql-ops
+
+<p float="left">
+  <img src="./.coverage/branch.svg">
+  <img src="./.coverage/method.svg">
+  <img src="./.coverage/line.svg">
+  <img src="./.coverage/complexity.svg">
+</p>
+
+A simple tool to execute any sql script.
+```
+
+Rendered:
+
+![image](https://github.com/jrichardsz/jacoco-easy-badger-maven-plugin/assets/3322836/444cc7b7-67d5-4f95-87cb-b6172281aee8)
+
+**CodeBuild**
+
+Save the generated badge file as an artifact; configure S3 to send an event every time a badge is uploaded; use a lambda function to copy the latest badge to a known, fixed location; embed a link to that fixed location.
+
+## Contributors
+
+<table>
+  <tbody>
+    <td>
+      <img src="https://avatars.githubusercontent.com/u/1236302?s=48&v=4" width="100px;"/>
+      <br />
+      <label><a href="http://sigpwned.com">Sigpwned</a></label>
+      <br />
+    </td>   
+    <td>
+      <img src="https://avatars0.githubusercontent.com/u/3322836?s=460&v=4" width="100px;"/>
+      <br />
+      <label><a href="http://jrichardsz.github.io/">JRichardsz</a></label>
+      <br />
+    </td>    
+  </tbody>
+</table>

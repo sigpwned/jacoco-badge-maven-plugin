@@ -1,0 +1,15 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+sql-ops,org.usil.oss.common.cli,ArgumentsHelper,0,183,0,0,0,39,0,2,0,2
+sql-ops,org.usil.oss.common.logger,LoggerHelper,0,31,0,2,0,6,0,3,0,2
+sql-ops,org.usil.oss.common.ascii,TableAscciHelper,0,57,0,4,0,14,0,5,0,3
+sql-ops,org.usil.oss.devops.sqlops,SqlOps,32,561,3,35,6,113,3,20,0,4
+sql-ops,org.usil.oss.devops.sqlops,SqlOpsCmdEntrypoint,0,13,0,0,0,4,0,3,0,3
+sql-ops,org.usil.oss.common.file,FileHelper,0,165,1,17,0,29,1,12,0,4
+sql-ops,org.usil.oss.common.file,ClassPathProperties,0,66,0,6,0,21,0,10,0,7
+sql-ops,org.usil.oss.common.exception,ExceptionHelper,0,39,0,4,0,9,0,4,0,2
+sql-ops,org.usil.oss.common.string,StringHelper,2,59,1,5,1,14,1,7,0,5
+sql-ops,org.usil.oss.common.database,ConnectionHelper,0,70,0,0,0,14,0,2,0,2
+sql-ops,org.usil.oss.common.database,DatabaseHelper,0,49,0,6,0,14,0,5,0,2
+sql-ops,org.usil.oss.common.database,DatabaseExecutor,30,109,11,3,7,24,6,4,0,3
+sql-ops,org.usil.oss.common.database,SqlRunner,26,188,6,16,8,52,6,8,0,3
+sql-ops,org.usil.oss.common.database,RawSqlParser,23,190,5,11,8,42,4,7,0,3
