@@ -14,6 +14,7 @@
 package com.sigpwned.maven.jacoco;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 import org.junit.Test;
@@ -83,6 +84,21 @@ public class CoverageReportTest {
 
       assertEquals(percent, 92);
     } finally {
+      tmp.delete();
+    }
+  }
+  
+  @Test
+  public void shouldFailIfCsvReportHasNotExpectedHeaders() throws IOException {
+    File tmp = File.createTempFile("wrong_headers.", ".csv");
+    try {
+      Files.write(Resources.toByteArray(Resources.getResource("wrong_headers.csv")), tmp);
+      Coverages.report(tmp, Metric.line);
+      fail("My method didn't throw when I expected it to: csv headers are wrong");
+    }catch(Exception e) {
+      assertEquals(true, e.getMessage().startsWith("unexpected headers"));
+    }
+    finally {
       tmp.delete();
     }
   }

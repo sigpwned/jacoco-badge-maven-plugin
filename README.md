@@ -1,4 +1,11 @@
-# jacoco-easy-badger-maven-plugin
+# jacoco-badge-maven-plugin
+
+<p float="left">
+  <img src="./.coverage/branch.svg">
+  <img src="./.coverage/method.svg">
+  <img src="./.coverage/line.svg">
+  <img src="./.coverage/complexity.svg">
+</p>
 
 A simple maven plugin to generate JaCoCo build badges
 
@@ -16,89 +23,51 @@ integrate directly with the plugin in question.
 Here is a simple setup for surefire and JaCoCo that generates a
 formatted HTML JaCoCo test coverage report.
 
-    <!-- Set up surefire to run just unit tests and take
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-surefire-plugin</artifactId>
-      <version>2.15</version>
+```xml
+<plugin>
+  <groupId>org.jacoco</groupId>
+  <artifactId>jacoco-maven-plugin</artifactId>
+  <version>0.8.11</version>
+  <executions>
+    <execution>
+      <goals>
+        <goal>prepare-agent</goal>
+      </goals>
+    </execution>
+    <execution>
+      <id>generate-code-coverage-report</id>
+      <phase>test</phase>
+      <goals>
+        <goal>report</goal>
+      </goals>
+    </execution>
+    <execution>
+      <id>check</id>
+      <goals>
+        <goal>check</goal>
+      </goals>
       <configuration>
-        <argLine>${surefireArgLine}</argLine>
-        <skipTests>${skip.unit.tests}</skipTests>
-        <excludes>
-          <!-- Standard approach to excluding integration tests -->
-          <exclude>**/IT*.java</exclude>
-        </excludes>
+        <rules>
+          <rule
+            implementation="org.jacoco.maven.RuleConfiguration">
+            <element>BUNDLE</element>
+            <limits>
+              <limit
+                implementation="org.jacoco.report.check.Limit">
+                <counter>INSTRUCTION</counter>
+                <value>COVEREDRATIO</value>
+                <minimum>0.80</minimum>
+              </limit>
+          </rule>
+        </rules>
       </configuration>
-    </plugin>
-
-    <plugin>
-      <groupId>org.jacoco</groupId>
-      <artifactId>jacoco-maven-plugin</artifactId>
-      <version>0.8.0</version>
-      <configuration>
-        <excludes>
-          <!-- Any exclusions you require, *.class -->
-        </excludes>
-      </configuration>
-      <executions>
-        <!-- Ask JaCoCo to generate a test report from surefire tests -->
-        <execution>
-          <id>prepare-code-coverage</id>
-          <goals>
-            <goal>prepare-agent</goal>
-          </goals>
-          <configuration>
-            <propertyName>surefireArgLine</propertyName>
-          </configuration>
-        </execution>
-
-        <!-- Ask JaCoCo to format test report into browsable HTML -->
-        <!-- Multi-module builds should include report-aggregate and use the -->
-        <!-- default outputDirectory. -->
-        <!-- Single-module builds should exclude report-aggregate and use -->
-        <!-- the given outputDirectory. -->
-        <execution>
-          <id>report-code-coverage</id>
-          <goals>
-            <goal>report</goal>
-            <!-- <goal>report-aggregate</goal> -->
-          </goals>
-          <configuration>
-            <!-- Multi-module builds should 
-            <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate</outputDirectory>
-          </configuration>
-        </execution>
-
-        <!-- Make sure we have at least 70% coverage -->
-        <execution>
-          <id>verify-test-coverage</id>
-          <goals>
-            <goal>check</goal>
-          </goals>
-          <configuration>
-            <rules>
-              <rule>
-                <element>BUNDLE</element>
-                <excludes>
-                  <exclude>*Mojo</exclude>
-                </excludes>
-                <limits>
-                  <limit>
-                    <counter>INSTRUCTION</counter>
-                    <value>COVEREDRATIO</value>
-                    <minimum>70%</minimum>
-                  </limit>
-                </limits>
-              </rule>
-            </rules>
-            <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate</outputDirectory>
-          </configuration>
-        </execution>
-      </executions>
-    </plugin>
+    </execution>
+  </executions>
+</plugin>
+```
 
 With this configuration, running `mvn test` should generate a friendly
-HTML report of test coverage at `target/site/jacoco-aggregate/index.html`.
+HTML report of test coverage at `target/site/jacoco/index.html` and the most important file `/target/site/jacoco/jacoco.csv` which is required to get the badges percentages.
 
 ### Configuring Badge Generation
 
@@ -108,9 +77,9 @@ configuration of this plugin to generate a badge based on unit tests:
 
 ```xml
 <plugin>
-  <groupId>com.jrichardsz</groupId>
-  <artifactId>jacoco-easy-badger-maven-plugin</artifactId>
-  <version>1.0.0</version>
+  <groupId>com.sigpwned</groupId>
+  <artifactId>jacoco-badge-maven-plugin</artifactId>
+  <version>0.1.6</version>
   <executions>
     <execution>
       <id>generate-jacoco-badge</id>
@@ -124,7 +93,7 @@ configuration of this plugin to generate a badge based on unit tests:
         <reportFile>${project.build.directory}/site/jacoco/jacoco.csv</reportFile>
         <!-- target folder where badges will be generated -->
         <badgesFolder>${project.basedir}/.coverage</badgesFolder>
-        <!-- minimum threshold allowed  -->
+        <!-- minimum allowed threshold -->
         <passing>70</passing>
       </configuration>
     </execution>
@@ -134,15 +103,25 @@ configuration of this plugin to generate a badge based on unit tests:
 
 ## Including the Badge in your README
 
-There are a couple of good ways to include the badge file into your
-README:
+If you configured **<artifactId>jacoco-maven-plugin</artifactId>** to create the jacoco csv report in the **test** phase and the **jacoco-badge-maven-plugin** in the **package** phase, you only need to run `mvn clean install` which by maven definition executed the complation, tests, jacoco report and our badge generator plugin. You should see a log like:
+
+```
+[INFO] --- jacoco-badge:0.1.6:badge (generate-badge) @ jacoco-badge-maven-plugin ---
+[INFO] badge branch:66 pass:70 file:/home/foo/jrichardsz/jacoco-easy-badger-maven-plugin/.coverage/branch.svg
+[INFO] badge line:77 pass:70 file:/home/foo/jrichardsz/jacoco-easy-badger-maven-plugin/.coverage/line.svg
+[INFO] badge method:77 pass:70 file:/home/foo/jrichardsz/jacoco-easy-badger-maven-plugin/.coverage/method.svg
+[INFO] badge complexity:71 pass:70 file:/home/foo/jrichardsz/jacoco-easy-badger-maven-plugin/.coverage/complexity.svg
+[INFO] 
+```
+
+So if the svg files are well generatd, there are a couple of good ways to include the badges files into your README:
 
 **GitHub Only**
 
 It is not a convention but you could storage the svg badges in the **.coverage** folder, add the follwing markdown piece (usually at the begining) and push changes
 
 ```
-# sql-ops
+# acme-library
 
 <p float="left">
   <img src="./.coverage/branch.svg">
@@ -151,7 +130,7 @@ It is not a convention but you could storage the svg badges in the **.coverage**
   <img src="./.coverage/complexity.svg">
 </p>
 
-A simple tool to execute any sql script.
+A simple tool from acme team.
 ```
 
 Rendered:
@@ -161,22 +140,3 @@ Rendered:
 **CodeBuild**
 
 Save the generated badge file as an artifact; configure S3 to send an event every time a badge is uploaded; use a lambda function to copy the latest badge to a known, fixed location; embed a link to that fixed location.
-
-## Contributors
-
-<table>
-  <tbody>
-    <td>
-      <img src="https://avatars.githubusercontent.com/u/1236302?s=48&v=4" width="100px;"/>
-      <br />
-      <label><a href="http://sigpwned.com">Sigpwned</a></label>
-      <br />
-    </td>   
-    <td>
-      <img src="https://avatars0.githubusercontent.com/u/3322836?s=460&v=4" width="100px;"/>
-      <br />
-      <label><a href="http://jrichardsz.github.io/">JRichardsz</a></label>
-      <br />
-    </td>    
-  </tbody>
-</table>

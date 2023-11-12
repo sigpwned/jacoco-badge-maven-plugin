@@ -98,8 +98,8 @@ public class BadgeMojo extends AbstractMojo {
       badgesFolderInstance.mkdirs();
 
     File reportFile = this.reportFile;
-    if (!reportFile.getParentFile().exists())
-      reportFile.getParentFile().mkdirs();
+    if (!reportFile.exists())
+      throw new MojoExecutionException("reportFile does not exist: "+reportFile.getAbsolutePath());
 
     if (passing < 0 || passing > 100)
       throw new MojoExecutionException(passing, "Invalid passing score: " + passing,
@@ -130,7 +130,6 @@ public class BadgeMojo extends AbstractMojo {
         }
         percent = (int) (100.0 * coverage.getPercent());
       }
-
 
       boolean passed = percent >= passing;
 

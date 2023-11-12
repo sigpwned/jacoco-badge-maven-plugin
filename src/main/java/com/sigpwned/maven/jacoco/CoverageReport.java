@@ -106,7 +106,7 @@ public class CoverageReport implements AutoCloseable {
             throw new EOFException();
         
         List<String> headers=Arrays.asList(line.trim().split(","));
-        if(!getHeaders().equals(HEADERS))
+        if(!getHeaders().equals(headers))
             throw new IOException("unexpected headers; expected="+HEADERS+", found="+headers);
     }
 
